@@ -27,7 +27,7 @@ class StdoutRedirect(QObject):
         sys.stdout.flush()
         self.printOccur.emit(s, color)
 
-
+'''
 class ConsoleView(QWidget, sys):
     def __init__(self, parent=None):
         super(ConsoleView, self).__init__(parent)
@@ -43,3 +43,4 @@ class ConsoleView(QWidget, sys):
         self.textBrowser.insertPlainText(msg)
         # refresh textedit show, refer) https://doc.qt.io/qt-5/qeventloop.html#ProcessEventsFlag-enum
         QApplication.processEvents(QEventLoop.ExcludeUserInputEvents)
+'''
