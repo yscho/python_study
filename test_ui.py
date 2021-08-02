@@ -16,6 +16,7 @@ import os
 import shutil
 import test_ui_im
 import StdoutRedirect
+import DefaultPathControl
 
 class StdoutRedirect(QObject):
     printOccur = pyqtSignal(str, str, name="print")
@@ -40,6 +41,8 @@ class StdoutRedirect(QObject):
 
 
 class Ui_Dialog(object):
+
+    oPathControl = DefaultPathControl.cDefaultPathControl()
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -80,17 +83,19 @@ class Ui_Dialog(object):
         self.lineEdit_andro_tar = QtWidgets.QLineEdit(Dialog)
         self.lineEdit_andro_tar.setGeometry(QtCore.QRect(30, 350, 291, 31))
         self.lineEdit_andro_tar.setObjectName("textBrowser")
-        self.lineEdit_andro_tar.setText("test Default")
+
+        #self.lineEdit_andro_tar.setText("test Default")
 
         self.lineEdit_facos_src = QtWidgets.QLineEdit(Dialog)
         self.lineEdit_facos_src.setGeometry(QtCore.QRect(370, 350, 291, 31))
         self.lineEdit_facos_src.setObjectName("lineEdit_facos_src")
-        self.lineEdit_facos_src.setText("test Default")
+        #self.lineEdit_facos_src.setText("test Default")
+        self.oPathControl.init_src_tar_path_txt(self.lineEdit_andro_tar, self.lineEdit_facos_src)
 
         self.systemBrowser = QtWidgets.QTextBrowser(Dialog)
         self.systemBrowser.setGeometry(QtCore.QRect(30, 580, 640, 240))
         self.systemBrowser.setObjectName("systemBrowser")
-        self.systemBrowser.setText("test Default")
+        self.systemBrowser.setText("test Default=================")
         #self.systemBrowser.print(self, ps1)
 
 #button Setting
@@ -112,7 +117,10 @@ class Ui_Dialog(object):
         self.bt_open_and = QtWidgets.QPushButton(Dialog)
         self.bt_open_and.setGeometry(QtCore.QRect(220, 385, 100, 20))
         self.bt_open_and.setObjectName("bt_movepaht_and")
-        self.bt_open_and.clicked.connect(self.open_path_url_and)
+        #self.bt_open_and.clicked.connect(self.open_path_url_and)
+        self.bt_open_and.clicked.connect(
+            lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and,
+                                            self.treeView_Andro))
 
         self.bt_open_fac = QtWidgets.QPushButton(Dialog)
         self.bt_open_fac.setGeometry(QtCore.QRect(560, 385, 100, 20))
@@ -124,14 +132,13 @@ class Ui_Dialog(object):
         self.bt_savepath_and.setObjectName("bt_savepath_and")
         #self.bt_savepath_and.clicked.connect(self.open_path_url_and)
         #self.bt_savepath_fac.clicked.connect(lambda: self.open_path_url_test(self.lineEdit_andro_tar))
-        self.bt_savepath_and.clicked.connect(lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and, self.treeView_Andro))
-
+        #self.bt_savepath_and.clicked.connect(lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and, self.treeView_Andro))
+        self.bt_savepath_and.clicked.connect(lambda: self.oPathControl.save_path("tar", self.lineEdit_andro_tar.text()))
 
         self.bt_savepath_fac = QtWidgets.QPushButton(Dialog)
         self.bt_savepath_fac.setGeometry(QtCore.QRect(450, 385, 100, 20))
         self.bt_savepath_fac.setObjectName("bt_savepath_fac")
-        self.bt_savepath_fac.clicked.connect(self.open_path_url_fac)
-        #self.bt_savepath_fac.clicked.connect(lambda: self.open_path_url_test(self.lineEdit_andro_tar))
+        self.bt_savepath_fac.clicked.connect(lambda: self.oPathControl.save_path("src", self.lineEdit_andro_tar.text()))
 
 
 
@@ -285,44 +292,18 @@ class Ui_Dialog(object):
 
 
 
-    def out(command):
-        #result = \
-        run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        #return result.stdout
-
-    def cmdline(command):
-        process = Popen(
-            args=command,
-            stdout=PIPE,
-            shell=True
-        )
-        return process.communicate()[0]
 
     def run_os_system(self):
         import subprocess
-        import commands
+
         bat_cmd = "dir"
         p = subprocess.Popen(bat_cmd, stdout=subprocess.PIPE, shell=True)
-        #os.system(bat_cmd)
-        print("\n")
         result = p.stdout.read()
-        print (type(result))
-        #result2 = result.encode('utf-8')
-        result2 = str(result)
-        result2.encode('utf-8')
-        print(type(result2))
-        print("\n")
-        print("test")
-        print("\n")
+        result2 = result.decode('euc-kr')
+
         print(result2)
-        #print (self.cmdline(bat_cmd))
-        os.system(bat_cmd)
-        #result = subprocess.getoutput()
-        #print(os.system(bat_cmd))
-        #print(result)
-        #self.systemBrowser.setText(result)
-        #result = commands.getoutput(batcmd)
-        #self.systemBrowser.
+
+        #os.system(bat_cmd)
 
     def _append_text(self, msg):
         self.systemBrowser.moveCursor(QtGui.QTextCursor.End)
