@@ -20,7 +20,9 @@ import DefaultPathControl
 
 class Ui_Dialog(object):
 
-    oPathControl = DefaultPathControl.cExplorerPathControl()
+    src_path_filename = "./src_default_path.bin"
+    tar_path_filename = "./tar_default_path.bin"
+
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -30,16 +32,39 @@ class Ui_Dialog(object):
         self.checkBox.setGeometry(QtCore.QRect(610, 30, 91, 21))
         self.checkBox.setObjectName("checkBox")
 
+        self.oPathControl_AndroTar = DefaultPathControl.CexplorerPathControl(self.tar_path_filename, Dialog)
+        self.oPathControl_FacosSrc = DefaultPathControl.CexplorerPathControl(self.src_path_filename, Dialog)
 
+        self.oPathControl_AndroTar.lineEdit_path_txt.setGeometry(QtCore.QRect(30, 350, 291, 31))
+        self.oPathControl_AndroTar.treeView_explorer.setGeometry(QtCore.QRect(30, 140, 291, 192))
+
+        self.oPathControl_FacosSrc.lineEdit_path_txt.setGeometry(QtCore.QRect(370, 350, 291, 31))
+        self.oPathControl_FacosSrc.treeView_explorer.setGeometry(QtCore.QRect(370, 140, 291, 192))
+
+        '''
+        self.lineEdit_andro_tar = QtWidgets.QLineEdit(Dialog)
+        self.lineEdit_andro_tar.setGeometry(QtCore.QRect(30, 350, 291, 31))
+        self.lineEdit_andro_tar.setObjectName("textBrowser")
+
+        self.lineEdit_facos_src = QtWidgets.QLineEdit(Dialog)
+        self.lineEdit_facos_src.setGeometry(QtCore.QRect(370, 350, 291, 31))
+        self.lineEdit_facos_src.setObjectName("lineEdit_facos_src")
+        '''
+
+
+        '''
         self.qfsmodel_andro_path = QFileSystemModel()
-        # self.model.setRootPath(self.path_root)
         self.qfsmodel_andro_path.setRootPath("D:")
         self.index_root_and = self.qfsmodel_andro_path.index(self.qfsmodel_andro_path.rootPath())
+        
         self.treeView_Andro = QtWidgets.QTreeView(Dialog)
-        self.treeView_Andro.setModel(self.qfsmodel_andro_path)
+        self.treeView_Andro.setModel(self.oPathControl_AndroTar.qfsmodel_andro_path)
         self.treeView_Andro.setGeometry(QtCore.QRect(30, 140, 291, 192))
         self.treeView_Andro.setObjectName("treeView_Andro")
+        self.treeView_Andro.setRootIndex(self.oPathControl_AndroTar.index_root_and)
         self.treeView_Andro.clicked.connect(self.on_treeView_Andro_clicked)
+       
+
 
         self.model_facos_path = QFileSystemModel()
         self.model_facos_path.setRootPath("C:")
@@ -49,19 +74,9 @@ class Ui_Dialog(object):
         self.treeView_Facos.setGeometry(QtCore.QRect(370, 140, 291, 192))
         self.treeView_Facos.setObjectName("treeView_Facos")
         self.treeView_Facos.clicked.connect(self.on_FactreeView_clicked)
-
+        '''
         # Text Browser setting
-        self.lineEdit_andro_tar = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_andro_tar.setGeometry(QtCore.QRect(30, 350, 291, 31))
-        self.lineEdit_andro_tar.setObjectName("textBrowser")
 
-        #self.lineEdit_andro_tar.setText("test Default")
-
-        self.lineEdit_facos_src = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_facos_src.setGeometry(QtCore.QRect(370, 350, 291, 31))
-        self.lineEdit_facos_src.setObjectName("lineEdit_facos_src")
-        #self.lineEdit_facos_src.setText("test Default")
-        self.oPathControl.init_src_tar_path_txt(self.lineEdit_andro_tar, self.lineEdit_facos_src)
 
         self.systemBrowser = QtWidgets.QTextBrowser(Dialog)
         self.systemBrowser.setGeometry(QtCore.QRect(30, 580, 640, 240))
@@ -89,9 +104,11 @@ class Ui_Dialog(object):
         self.bt_open_and.setGeometry(QtCore.QRect(220, 385, 100, 20))
         self.bt_open_and.setObjectName("bt_movepaht_and")
         #self.bt_open_and.clicked.connect(self.open_path_url_and)
+        #self.bt_open_and.clicked.connect(
+        #    lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and,
+        #                                    self.treeView_Andro))
         self.bt_open_and.clicked.connect(
-            lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and,
-                                            self.treeView_Andro))
+                lambda: self.oPathControl_AndroTar.open_path_url_and(self.lineEdit_andro_tar, self.treeView_Andro))
 
         self.bt_open_fac = QtWidgets.QPushButton(Dialog)
         self.bt_open_fac.setGeometry(QtCore.QRect(560, 385, 100, 20))
@@ -101,13 +118,12 @@ class Ui_Dialog(object):
         self.bt_savepath_and = QtWidgets.QPushButton(Dialog)
         self.bt_savepath_and.setGeometry(QtCore.QRect(110, 385, 100, 20))
         self.bt_savepath_and.setObjectName("bt_savepath_and")
-        self.bt_savepath_and.clicked.connect(lambda: self.oPathControl.save_path("tar", self.lineEdit_andro_tar.text()))
+        self.bt_savepath_and.clicked.connect(lambda: self.oPathControl_AndroTar.save_path(self.lineEdit_andro_tar.text()))
 
         self.bt_savepath_fac = QtWidgets.QPushButton(Dialog)
         self.bt_savepath_fac.setGeometry(QtCore.QRect(450, 385, 100, 20))
         self.bt_savepath_fac.setObjectName("bt_savepath_fac")
-        self.bt_savepath_fac.clicked.connect(lambda: self.oPathControl.save_path("src", self.lineEdit_facos_src.text()))
-
+        self.bt_savepath_fac.clicked.connect(lambda: self.oPathControl_FacosSrc.save_path(self.lineEdit_facos_src.text()))
 
 
         # ------------------TEMP BT--------------------------------------------------
@@ -159,11 +175,7 @@ class Ui_Dialog(object):
         self.bt_savepath_fac.setText(_translate("Dialog", "Save_Src_path"))
 
     def showDialog_AndPath(self):
-        #fname = QFileDialog.getOpenFileName(self, 'Open file', 'd:')
-        #fname = QFileDialog.getOpenFileName(self, 'Select Directory', 'd:')
-        print("clik and path bt")
         fname = QFileDialog.getExistingDirectory(self.bt_androPath, 'Select Directory', 'd:')
-        print(fname)
         self.qfsmodel_andro_path.setRootPath(fname)
         self.index_root_and = self.qfsmodel_andro_path.index(self.qfsmodel_andro_path.rootPath())
         self.treeView_Andro.setRootIndex(self.index_root_and)
@@ -171,7 +183,6 @@ class Ui_Dialog(object):
 
     def showDialog_FacPath(self):
         fname = QFileDialog.getExistingDirectory(self.bt_androPath, 'Select Directory', 'd:')
-        print(fname)
         self.model_facos_path.setRootPath(fname)
         self.index_root_facos = self.model_facos_path.index(self.model_facos_path.rootPath())
         self.treeView_Facos.setRootIndex(self.index_root_facos)
@@ -203,13 +214,14 @@ class Ui_Dialog(object):
         self.model_facos_path.setRootPath(urlpath)
         self.index_root_facos = self.model_facos_path.index(self.model_facos_path.rootPath())
         self.treeView_Facos.setRootIndex(self.index_root_facos)
-
+    '''
     def open_path_url_test (self, ob_QLineEdit, ob_QFilesysmodel, ob_Qmodel_index, ob_QtreeView):
         urlpath = ob_QLineEdit.text()
         print(urlpath)
         ob_QFilesysmodel.setRootPath(urlpath)
         ob_Qmodel_index = ob_QFilesysmodel.index(ob_QFilesysmodel.rootPath())
         ob_QtreeView.setRootIndex(ob_Qmodel_index)
+    '''
 
     def file_cp(self):
         print("test file copy")
