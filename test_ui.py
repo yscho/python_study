@@ -14,46 +14,17 @@ from PyQt5.Qt import QFileSystemModel
 from PyQt5.QtCore import pyqtSlot, QEventLoop, pyqtSignal, QObject
 import os
 import shutil
-import test_ui_im
 import StdoutRedirect
 import DefaultPathControl
-
-class StdoutRedirect(QObject):
-    printOccur = pyqtSignal(str, str, name="print")
-
-    def __init__(self, *param):
-        QObject.__init__(self, None)
-        self.daemon = True
-        self.sysstdout = sys.stdout.write
-        self.sysstderr = sys.stderr.write
-
-    def stop(self):
-        sys.stdout.write = self.sysstdout
-        sys.stderr.write = self.sysstderr
-
-    def start(self):
-        sys.stdout.write = self.write
-        sys.stderr.write = lambda msg: self.write(msg, color="red")
-
-    def write(self, s, color="black"):
-        sys.stdout.flush()
-        self.printOccur.emit(s, color)
 
 
 class Ui_Dialog(object):
 
-    oPathControl = DefaultPathControl.cDefaultPathControl()
+    oPathControl = DefaultPathControl.cExplorerPathControl()
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(723, 900)
-        """
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(340, 490, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        """
 
         self.checkBox = QtWidgets.QCheckBox(Dialog)
         self.checkBox.setGeometry(QtCore.QRect(610, 30, 91, 21))
@@ -130,25 +101,15 @@ class Ui_Dialog(object):
         self.bt_savepath_and = QtWidgets.QPushButton(Dialog)
         self.bt_savepath_and.setGeometry(QtCore.QRect(110, 385, 100, 20))
         self.bt_savepath_and.setObjectName("bt_savepath_and")
-        #self.bt_savepath_and.clicked.connect(self.open_path_url_and)
-        #self.bt_savepath_fac.clicked.connect(lambda: self.open_path_url_test(self.lineEdit_andro_tar))
-        #self.bt_savepath_and.clicked.connect(lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and, self.treeView_Andro))
         self.bt_savepath_and.clicked.connect(lambda: self.oPathControl.save_path("tar", self.lineEdit_andro_tar.text()))
 
         self.bt_savepath_fac = QtWidgets.QPushButton(Dialog)
         self.bt_savepath_fac.setGeometry(QtCore.QRect(450, 385, 100, 20))
         self.bt_savepath_fac.setObjectName("bt_savepath_fac")
-        self.bt_savepath_fac.clicked.connect(lambda: self.oPathControl.save_path("src", self.lineEdit_andro_tar.text()))
+        self.bt_savepath_fac.clicked.connect(lambda: self.oPathControl.save_path("src", self.lineEdit_facos_src.text()))
 
 
 
-
-        """
-        self.horizontalScrollBar = QtWidgets.QScrollBar(Dialog)
-        self.horizontalScrollBar.setGeometry(QtCore.QRect(20, 380, 271, 21))
-        self.horizontalScrollBar.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalScrollBar.setObjectName("horizontalScrollBar")
-        """
         # ------------------TEMP BT--------------------------------------------------
         self.bt_temp1 = QtWidgets.QPushButton(Dialog)
         self.bt_temp1.setGeometry(QtCore.QRect(30, 470, 113, 20))
@@ -170,7 +131,7 @@ class Ui_Dialog(object):
         self.bt_temp4.clicked.connect(self.run_os_system)
 
         #--------------------------------------------------------------------
-        self._stdout = StdoutRedirect()
+        self._stdout = StdoutRedirect.StdoutRedirect()
         self._stdout.start()
         self._stdout.printOccur.connect(lambda x: self._append_text(x))
 
