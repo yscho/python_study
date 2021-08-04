@@ -5,6 +5,8 @@ from PyQt5.QtCore import pyqtSignal, QObject, QEventLoop
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.uic.properties import QtGui
 
+class SystemCmdUi:
+    print("test systmeui")
 
 class StdoutRedirect(QObject):
     printOccur = pyqtSignal(str, str, name="print")

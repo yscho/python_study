@@ -2,3 +2,9 @@
 __pycache__/DefaultPathControl.cpython-39.pyc
 src_default_path.bin
 tar_default_path.bin
+DEV_SEC_ELF/aivi2_core/sec.elf
+SIGNED_ABLMINI_ELF/ablmini.elf_core_sign
+SIGNED_ABLMINI_ELF/ablmini.elf_full_sign
+DEV_SEC_ELF/aivi2_full/sec.elf
+__pycache__/StdoutRedirect.cpython-39.pyc
+__pycache__/StdoutRedirect.cpython-39.pyc

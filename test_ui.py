@@ -17,7 +17,6 @@ import shutil
 import StdoutRedirect
 import DefaultPathControl
 
-
 class Ui_Dialog(object):
 
     src_path_filename = "./src_default_path.bin"
@@ -33,99 +32,32 @@ class Ui_Dialog(object):
         self.checkBox.setObjectName("checkBox")
 
         self.oPathControl_AndroTar = DefaultPathControl.CexplorerPathControl(self.tar_path_filename, Dialog)
-        self.oPathControl_FacosSrc = DefaultPathControl.CexplorerPathControl(self.src_path_filename, Dialog)
-
         self.oPathControl_AndroTar.lineEdit_path_txt.setGeometry(QtCore.QRect(30, 350, 291, 31))
         self.oPathControl_AndroTar.treeView_explorer.setGeometry(QtCore.QRect(30, 140, 291, 192))
+        self.oPathControl_AndroTar.bt_path_search.setGeometry(QtCore.QRect(30, 100, 120, 23))
+        self.oPathControl_AndroTar.bt_path_search.setObjectName("bt_androPath")
+        self.oPathControl_AndroTar.bt_path_open.setGeometry(QtCore.QRect(220, 385, 100, 20))
+        self.oPathControl_AndroTar.bt_path_open.setObjectName("bt_movepaht_and")
+        self.oPathControl_AndroTar.bt_path_save.setGeometry(QtCore.QRect(110, 385, 100, 20))
+        self.oPathControl_AndroTar.bt_path_save.setObjectName("bt_savepath_and")
 
+        self.oPathControl_FacosSrc = DefaultPathControl.CexplorerPathControl(self.src_path_filename, Dialog)
         self.oPathControl_FacosSrc.lineEdit_path_txt.setGeometry(QtCore.QRect(370, 350, 291, 31))
         self.oPathControl_FacosSrc.treeView_explorer.setGeometry(QtCore.QRect(370, 140, 291, 192))
+        self.oPathControl_FacosSrc.bt_path_search.setGeometry(QtCore.QRect(370, 100, 120, 23))
+        self.oPathControl_FacosSrc.bt_path_search.setObjectName("bt_facosPath")
+        self.oPathControl_FacosSrc.bt_path_open.setGeometry(QtCore.QRect(560, 385, 100, 20))
+        self.oPathControl_FacosSrc.bt_path_open.setObjectName("bt_movepaht_fac")
+        self.oPathControl_FacosSrc.bt_path_save.setGeometry(QtCore.QRect(450, 385, 100, 20))
+        self.oPathControl_FacosSrc.bt_path_save.setObjectName("bt_savepath_fac")
 
-        '''
-        self.lineEdit_andro_tar = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_andro_tar.setGeometry(QtCore.QRect(30, 350, 291, 31))
-        self.lineEdit_andro_tar.setObjectName("textBrowser")
-
-        self.lineEdit_facos_src = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_facos_src.setGeometry(QtCore.QRect(370, 350, 291, 31))
-        self.lineEdit_facos_src.setObjectName("lineEdit_facos_src")
-        '''
-
-
-        '''
-        self.qfsmodel_andro_path = QFileSystemModel()
-        self.qfsmodel_andro_path.setRootPath("D:")
-        self.index_root_and = self.qfsmodel_andro_path.index(self.qfsmodel_andro_path.rootPath())
-        
-        self.treeView_Andro = QtWidgets.QTreeView(Dialog)
-        self.treeView_Andro.setModel(self.oPathControl_AndroTar.qfsmodel_andro_path)
-        self.treeView_Andro.setGeometry(QtCore.QRect(30, 140, 291, 192))
-        self.treeView_Andro.setObjectName("treeView_Andro")
-        self.treeView_Andro.setRootIndex(self.oPathControl_AndroTar.index_root_and)
-        self.treeView_Andro.clicked.connect(self.on_treeView_Andro_clicked)
-       
-
-
-        self.model_facos_path = QFileSystemModel()
-        self.model_facos_path.setRootPath("C:")
-        self.index_root_facos = self.model_facos_path.index(self.model_facos_path.rootPath())
-        self.treeView_Facos = QtWidgets.QTreeView(Dialog)
-        self.treeView_Facos.setModel(self.model_facos_path)
-        self.treeView_Facos.setGeometry(QtCore.QRect(370, 140, 291, 192))
-        self.treeView_Facos.setObjectName("treeView_Facos")
-        self.treeView_Facos.clicked.connect(self.on_FactreeView_clicked)
-        '''
-        # Text Browser setting
-
-
-        self.systemBrowser = QtWidgets.QTextBrowser(Dialog)
-        self.systemBrowser.setGeometry(QtCore.QRect(30, 580, 640, 240))
-        self.systemBrowser.setObjectName("systemBrowser")
-        self.systemBrowser.setText("test Default=================")
-        #self.systemBrowser.print(self, ps1)
+        self.oPathControl_AndroTar.label.setGeometry(QtCore.QRect(500, 90, 141, 31))
+        self.oPathControl_FacosSrc.label.setGeometry(QtCore.QRect(170, 90, 141, 31))
 
 #button Setting
-
-        self.bt_androPath = QtWidgets.QPushButton(Dialog)
-        self.bt_androPath.setGeometry(QtCore.QRect(30, 100, 120, 23))
-        self.bt_androPath.setObjectName("bt_androPath")
-        self.bt_androPath.clicked.connect(self.showDialog_AndPath)
-
-        self.bt_facosPath = QtWidgets.QPushButton(Dialog)
-        self.bt_facosPath.setGeometry(QtCore.QRect(370, 100, 120, 23))
-        self.bt_facosPath.setObjectName("bt_facosPath")
-        self.bt_facosPath.clicked.connect(self.showDialog_FacPath)
-
         self.pushButton_3 = QtWidgets.QPushButton(Dialog)
         self.pushButton_3.setGeometry(QtCore.QRect(610, 60, 75, 23))
         self.pushButton_3.setObjectName("pushButton_3")
-
-        self.bt_open_and = QtWidgets.QPushButton(Dialog)
-        self.bt_open_and.setGeometry(QtCore.QRect(220, 385, 100, 20))
-        self.bt_open_and.setObjectName("bt_movepaht_and")
-        #self.bt_open_and.clicked.connect(self.open_path_url_and)
-        #self.bt_open_and.clicked.connect(
-        #    lambda: self.open_path_url_test(self.lineEdit_andro_tar, self.qfsmodel_andro_path, self.index_root_and,
-        #                                    self.treeView_Andro))
-        self.bt_open_and.clicked.connect(
-                lambda: self.oPathControl_AndroTar.open_path_url_and(self.lineEdit_andro_tar, self.treeView_Andro))
-
-        self.bt_open_fac = QtWidgets.QPushButton(Dialog)
-        self.bt_open_fac.setGeometry(QtCore.QRect(560, 385, 100, 20))
-        self.bt_open_fac.setObjectName("bt_movepaht_fac")
-        self.bt_open_fac.clicked.connect(self.open_path_url_fac)
-
-        self.bt_savepath_and = QtWidgets.QPushButton(Dialog)
-        self.bt_savepath_and.setGeometry(QtCore.QRect(110, 385, 100, 20))
-        self.bt_savepath_and.setObjectName("bt_savepath_and")
-        self.bt_savepath_and.clicked.connect(lambda: self.oPathControl_AndroTar.save_path(self.lineEdit_andro_tar.text()))
-
-        self.bt_savepath_fac = QtWidgets.QPushButton(Dialog)
-        self.bt_savepath_fac.setGeometry(QtCore.QRect(450, 385, 100, 20))
-        self.bt_savepath_fac.setObjectName("bt_savepath_fac")
-        self.bt_savepath_fac.clicked.connect(lambda: self.oPathControl_FacosSrc.save_path(self.lineEdit_facos_src.text()))
-
-
         # ------------------TEMP BT--------------------------------------------------
         self.bt_temp1 = QtWidgets.QPushButton(Dialog)
         self.bt_temp1.setGeometry(QtCore.QRect(30, 470, 113, 20))
@@ -135,7 +67,6 @@ class Ui_Dialog(object):
         self.bt_temp2 = QtWidgets.QPushButton(Dialog)
         self.bt_temp2.setGeometry(QtCore.QRect(30, 490, 113, 20))
         self.bt_temp2.setObjectName("temp_bt2")
-        #self.bt_temp2.clicked.connect(self.file_cp)
 
         self.bt_temp3 = QtWidgets.QPushButton(Dialog)
         self.bt_temp3.setGeometry(QtCore.QRect(30, 510, 113, 20))
@@ -146,82 +77,41 @@ class Ui_Dialog(object):
         self.bt_temp4.setObjectName("temp_bt4")
         self.bt_temp4.clicked.connect(self.run_os_system)
 
+        # Text Browser setting
+
+        self.systemBrowser = QtWidgets.QTextBrowser(Dialog)
+        self.systemBrowser.setGeometry(QtCore.QRect(30, 580, 640, 240))
+        self.systemBrowser.setObjectName("systemBrowser")
+        self.systemBrowser.setText("test Default=================")
+
         #--------------------------------------------------------------------
-        self._stdout = StdoutRedirect.StdoutRedirect()
+        self._stdout = StdoutRedirect.StdoutRedirect(self)
         self._stdout.start()
         self._stdout.printOccur.connect(lambda x: self._append_text(x))
 
 
-
         self.retranslateUi(Dialog)
-        #self.buttonBox.accepted.connect(Dialog.accept)
-        #self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.bt_androPath.setText(_translate("Dialog", "And_path_open"))
-        self.bt_facosPath.setText(_translate("Dialog", "FacOS_path_open"))
         self.checkBox.setText(_translate("Dialog", "Secure"))
         self.pushButton_3.setText(_translate("Dialog", "PushButton"))
+        self.oPathControl_AndroTar.bt_path_search.setText(_translate("Dialog", "And_path_open"))
+        self.oPathControl_FacosSrc.bt_path_search.setText(_translate("Dialog", "FacOS_path_open"))
+
+        self.oPathControl_AndroTar.bt_path_open.setText(_translate("Dialog", "open_Android"))
+        self.oPathControl_FacosSrc.bt_path_open.setText(_translate("Dialog", "open_Facos"))
+        self.oPathControl_AndroTar.bt_path_save.setText(_translate("Dialog", "Save_Tar_path"))
+        self.oPathControl_FacosSrc.bt_path_save.setText(_translate("Dialog", "Save_Src_path"))
+
         self.bt_temp1.setText(_translate("Dialog", "file cp test"))
         self.bt_temp2.setText(_translate("Dialog", "temp2"))
         self.bt_temp3.setText(_translate("Dialog", "temp3"))
         self.bt_temp4.setText(_translate("Dialog", "calc cmd test"))
-        self.bt_open_and.setText(_translate("Dialog", "open_Android"))
-        self.bt_open_fac.setText(_translate("Dialog", "open_Facos"))
-        self.bt_savepath_and.setText(_translate("Dialog", "Save_Tar_path"))
-        self.bt_savepath_fac.setText(_translate("Dialog", "Save_Src_path"))
-
-    def showDialog_AndPath(self):
-        fname = QFileDialog.getExistingDirectory(self.bt_androPath, 'Select Directory', 'd:')
-        self.qfsmodel_andro_path.setRootPath(fname)
-        self.index_root_and = self.qfsmodel_andro_path.index(self.qfsmodel_andro_path.rootPath())
-        self.treeView_Andro.setRootIndex(self.index_root_and)
-        self.lineEdit_andro_tar.setText(fname)
-
-    def showDialog_FacPath(self):
-        fname = QFileDialog.getExistingDirectory(self.bt_androPath, 'Select Directory', 'd:')
-        self.model_facos_path.setRootPath(fname)
-        self.index_root_facos = self.model_facos_path.index(self.model_facos_path.rootPath())
-        self.treeView_Facos.setRootIndex(self.index_root_facos)
-        #self.treeView_Andro.setModel(self.qfsmodel_andro_path)
-        self.lineEdit_facos_src.setText(fname)
-
-    #@pyqtSlot(QtCore.QModelIndex)
-    def on_treeView_Andro_clicked(self, index):
-        indexItem = self.qfsmodel_andro_path.index(index.row(), 0, index.parent())
-        filePath = self.qfsmodel_andro_path.filePath(indexItem)
-        self.lineEdit_andro_tar.setText(filePath)
-
-    #@pyqtSlot(QtCore.QModelIndex)
-    def on_FactreeView_clicked(self, index):
-        indexItem = self.model_facos_path.index(index.row(), 0, index.parent())
-        filePath = self.model_facos_path.filePath(indexItem)
-        self.lineEdit_facos_src.setText(filePath)
-
-    def open_path_url_and (self):
-        urlpath = self.lineEdit_andro_tar.text()
-        print(urlpath)
-        self.qfsmodel_andro_path.setRootPath(urlpath)
-        self.index_root_and = self.qfsmodel_andro_path.index(self.qfsmodel_andro_path.rootPath())
-        self.treeView_Andro.setRootIndex(self.index_root_and)
-
-    def open_path_url_fac (self):
-        urlpath = self.lineEdit_facos_src.text()
-        print(urlpath)
-        self.model_facos_path.setRootPath(urlpath)
-        self.index_root_facos = self.model_facos_path.index(self.model_facos_path.rootPath())
-        self.treeView_Facos.setRootIndex(self.index_root_facos)
-    '''
-    def open_path_url_test (self, ob_QLineEdit, ob_QFilesysmodel, ob_Qmodel_index, ob_QtreeView):
-        urlpath = ob_QLineEdit.text()
-        print(urlpath)
-        ob_QFilesysmodel.setRootPath(urlpath)
-        ob_Qmodel_index = ob_QFilesysmodel.index(ob_QFilesysmodel.rootPath())
-        ob_QtreeView.setRootIndex(ob_Qmodel_index)
-    '''
+        self.oPathControl_AndroTar.label.setText(_translate("Dialog", "FactoryOS PATH View"))
+        self.oPathControl_FacosSrc.label.setText(_translate("Dialog", "Android PATH View"))
 
     def file_cp(self):
         print("test file copy")
@@ -262,9 +152,6 @@ class Ui_Dialog(object):
                         os.remove(dst_file)
 
                 shutil.copy(src_file, dst_dir)
-
-
-
 
     def run_os_system(self):
         import subprocess

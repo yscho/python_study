@@ -16,6 +16,7 @@ class CexplorerPathControl:
         self.lineEdit_path_txt.setObjectName("textBrowser")
         self.lineEdit_path_txt.setText(self.temp_path)
 
+
         self.qfsmodel_path = QFileSystemModel()
         self.qfsmodel_path.setRootPath(self.load_path())
         self.index_root_path = self.qfsmodel_path.index(self.qfsmodel_path.rootPath())
@@ -26,13 +27,34 @@ class CexplorerPathControl:
         self.treeView_explorer.setRootIndex(self.index_root_path)
         self.treeView_explorer.clicked.connect(self.on_treeView_explorer_clicked)
 
-        self.bt_path_select = QtWidgets.QPushButton(Dialog)
-        self.bt_path_select.clicked.connect(self.showDialog_Path)
+        self.bt_path_search = QtWidgets.QPushButton(Dialog)
+        self.bt_path_search.clicked.connect(self.showDialog_Path)
 
-    def save_path(self, full_path):
+        self.bt_path_open = QtWidgets.QPushButton(Dialog)
+        self.bt_path_open.clicked.connect(self.open_path_by_url)
+
+        self.bt_path_save = QtWidgets.QPushButton(Dialog)
+        self.bt_path_save.clicked.connect(self.save_path)
+
+        self.label = QtWidgets.QLabel(Dialog)
+        #self.label.setGeometry(QtCore.QRect(500, 90, 141, 31))
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.label.setTextFormat(QtCore.Qt.AutoText)
+        self.label.setScaledContents(False)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+
+    def save_path(self):
         print("save_path ")
         f = open(self.path_filename, 'w')
-        f.write(full_path)
+        f.write(self.lineEdit_path_txt.text())
         f.close()
 
     def load_path(self):
@@ -46,13 +68,13 @@ class CexplorerPathControl:
         return self.temp_path
 
     def showDialog_Path(self):
-        fname = QFileDialog.getExistingDirectory(self.bt_path_select, 'Select Directory', 'c:')
+        fname = QFileDialog.getExistingDirectory(self.bt_path_search, 'Select Directory', 'c:')
         self.qfsmodel_path.setRootPath(fname)
         self.index_root_path = self.qfsmodel_path.index(self.qfsmodel_path.rootPath())
         self.treeView_explorer.setRootIndex(self.index_root_path)
         self.lineEdit_path_txt.setText(fname)
 
-    def open_path_url_and(self):
+    def open_path_by_url(self):
         urlpath = self.lineEdit_path_txt.text()
         print(urlpath)
         self.qfsmodel_path.setRootPath(urlpath)
