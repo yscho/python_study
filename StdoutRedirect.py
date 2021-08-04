@@ -29,6 +29,7 @@ class StdoutRedirect(QObject):
         sys.stdout.flush()
         self.printOccur.emit(s, color)
 
+
 '''
 class ConsoleView(QWidget, sys):
     def __init__(self, parent=None):

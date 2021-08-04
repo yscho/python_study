@@ -16,12 +16,13 @@ import os
 import shutil
 import StdoutRedirect
 import DefaultPathControl
+import ColorPrint
 
 class Ui_Dialog(object):
 
     src_path_filename = "./src_default_path.bin"
     tar_path_filename = "./tar_default_path.bin"
-
+    oCOLOR = ColorPrint.Colors()
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -40,6 +41,7 @@ class Ui_Dialog(object):
         self.oPathControl_AndroTar.bt_path_open.setObjectName("bt_movepaht_and")
         self.oPathControl_AndroTar.bt_path_save.setGeometry(QtCore.QRect(110, 385, 100, 20))
         self.oPathControl_AndroTar.bt_path_save.setObjectName("bt_savepath_and")
+        self.oPathControl_AndroTar.label.setGeometry(QtCore.QRect(500, 90, 141, 31))
 
         self.oPathControl_FacosSrc = DefaultPathControl.CexplorerPathControl(self.src_path_filename, Dialog)
         self.oPathControl_FacosSrc.lineEdit_path_txt.setGeometry(QtCore.QRect(370, 350, 291, 31))
@@ -50,8 +52,6 @@ class Ui_Dialog(object):
         self.oPathControl_FacosSrc.bt_path_open.setObjectName("bt_movepaht_fac")
         self.oPathControl_FacosSrc.bt_path_save.setGeometry(QtCore.QRect(450, 385, 100, 20))
         self.oPathControl_FacosSrc.bt_path_save.setObjectName("bt_savepath_fac")
-
-        self.oPathControl_AndroTar.label.setGeometry(QtCore.QRect(500, 90, 141, 31))
         self.oPathControl_FacosSrc.label.setGeometry(QtCore.QRect(170, 90, 141, 31))
 
 #button Setting
@@ -114,70 +114,49 @@ class Ui_Dialog(object):
         self.oPathControl_FacosSrc.label.setText(_translate("Dialog", "Android PATH View"))
 
     def file_cp(self):
-        print("test file copy")
-        src_path = self.oPathControl_FacosSrc.lineEdit_path_txt.text()
-        src_path = src_path + '\*'
-        target_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
-        print("SRC : "+ src_path)
-        print("TAR : "+ target_path)
-        #self.copyDirTree(src_path,target_path)
-        temp_cmd = 'copy '+ src_path + ' ' + target_path
-        print(type(temp_cmd))
         temp_cmd_table = str.maketrans('/', '\\')
-        temp_cmd = temp_cmd.translate(temp_cmd_table)
-        #shutil.move(src_path, target_path)
-        #shutil.copy(src_path, target_path)
-        #os.system(temp_cmd)
-        print(temp_cmd)
-        self.run_os_system(temp_cmd)
+        tmp_src_path = self.oPathControl_FacosSrc.lineEdit_path_txt.text()
+        tmp_src_path = tmp_src_path.translate(temp_cmd_table)
+        src_path = tmp_src_path + "\\*"
+        self.check_facos_filelist(tmp_src_path)
 
-        #check_Facview = self.treeView_Facos.state()
-        #print(check_Facview)
+        target_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
+        target_path = target_path.translate(temp_cmd_table)
+        temp_cmd = 'robocopy '+ tmp_src_path + ' "' + target_path + '"'
+        #self.run_os_system(temp_cmd)
+        self.run_os_system("start cmd /k "+temp_cmd)
 
-    def copyDirTree(root_src_dir, root_dst_dir):
-        """
-        Copy directory tree. Overwrites also read only files.
-        :param root_src_dir: source directory
-        :param root_dst_dir:  destination directory
-        """
-
-        for src_dir, dirs, files in os.walk(root_src_dir):
-            dst_dir = src_dir.replace(root_src_dir, root_dst_dir, 1)
-            if not os.path.exists(dst_dir):
-                os.makedirs(dst_dir)
-            for file_ in files:
-                src_file = os.path.join(src_dir, file_)
-                dst_file = os.path.join(dst_dir, file_)
-                if os.path.exists(dst_file):
-                    try:
-                        os.remove(dst_file)
-                    except PermissionError as exc:
-                        os.chmod(dst_file, stat.S_IWUSR)
-                        os.remove(dst_file)
-
-                shutil.copy(src_file, dst_dir)
+        print("COPY DONE")
 
     def run_os_system(self, cmd):
         import subprocess
-
         bat_cmd = cmd
         p = subprocess.Popen(bat_cmd, stdout=subprocess.PIPE, shell=True)
         result = p.stdout.read()
         result2 = result.decode('euc-kr')
-
         print(result2)
-
-        #os.system(bat_cmd)
 
     def _append_text(self, msg):
         self.systemBrowser.moveCursor(QtGui.QTextCursor.End)
-        #self.systemBrowser.toPlainText().encode('utf-8')
         self.systemBrowser.insertPlainText(msg)
         # refresh textedit show, refer) https://doc.qt.io/qt-5/qeventloop.html#ProcessEventsFlag-enum
         QApplication.processEvents(QEventLoop.ExcludeUserInputEvents)
 
+    def check_facos_filelist(self, dir_path):
+        filelist = ["ablmini.elf","miniosdata.img","miniosdtbo.img","minioskernel.img","miniosmain.img"]
 
+        if os.path.exists(dir_path+"\\ablmini.img"):
+            print("ablmini.img exists we have to change elf file")
+            file_oldname = os.path.join(dir_path, "ablmini.img")
+            file_newname = os.path.join(dir_path, "ablmini.elf")
+            shutil.move(file_oldname, file_newname)
 
+        print(__name__)
+        for i in filelist:
+            if os.path.exists(dir_path+"\\"+i):
+                print(i)
+            else:
+                self.oCOLOR.COLOR_PRINT( i+"IS NOT EXIST", self.oCOLOR.RED)
 
 if __name__ == "__main__":
     import sys
