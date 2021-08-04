@@ -75,7 +75,7 @@ class Ui_Dialog(object):
         self.bt_temp4 = QtWidgets.QPushButton(Dialog)
         self.bt_temp4.setGeometry(QtCore.QRect(30, 530, 113, 20))
         self.bt_temp4.setObjectName("temp_bt4")
-        self.bt_temp4.clicked.connect(self.run_os_system)
+        self.bt_temp4.clicked.connect(lambda: self.run_os_system("dir"))
 
         # Text Browser setting
 
@@ -115,17 +115,21 @@ class Ui_Dialog(object):
 
     def file_cp(self):
         print("test file copy")
-        src_path = self.lineEdit_facos_src.text()
-        print(src_path)
+        src_path = self.oPathControl_FacosSrc.lineEdit_path_txt.text()
         src_path = src_path + '\*'
-        target_path = self.lineEdit_andro_tar.text()
-        print(src_path)
-        print(target_path)
+        target_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
+        print("SRC : "+ src_path)
+        print("TAR : "+ target_path)
         #self.copyDirTree(src_path,target_path)
         temp_cmd = 'copy '+ src_path + ' ' + target_path
+        print(type(temp_cmd))
+        temp_cmd_table = str.maketrans('/', '\\')
+        temp_cmd = temp_cmd.translate(temp_cmd_table)
         #shutil.move(src_path, target_path)
         #shutil.copy(src_path, target_path)
-        os.system(temp_cmd)
+        #os.system(temp_cmd)
+        print(temp_cmd)
+        self.run_os_system(temp_cmd)
 
         #check_Facview = self.treeView_Facos.state()
         #print(check_Facview)
@@ -153,10 +157,10 @@ class Ui_Dialog(object):
 
                 shutil.copy(src_file, dst_dir)
 
-    def run_os_system(self):
+    def run_os_system(self, cmd):
         import subprocess
 
-        bat_cmd = "dir"
+        bat_cmd = cmd
         p = subprocess.Popen(bat_cmd, stdout=subprocess.PIPE, shell=True)
         result = p.stdout.read()
         result2 = result.decode('euc-kr')
