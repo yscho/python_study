@@ -8,3 +8,6 @@ SIGNED_ABLMINI_ELF/ablmini.elf_full_sign
 DEV_SEC_ELF/aivi2_full/sec.elf
 __pycache__/StdoutRedirect.cpython-39.pyc
 __pycache__/StdoutRedirect.cpython-39.pyc
+*.elf
+SIGNED_ABLMINI_ELF/CORE/ablmini.elf_core_sign
+SIGNED_ABLMINI_ELF/FULL/ablmini.elf_full_sign
