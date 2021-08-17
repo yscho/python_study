@@ -32,6 +32,6 @@ class Secure_check:
         font.setBold(True)
         font.setFamily("Agency FB")
         self.combobox_sec.setFont(font)
-        self.combobox_sec.addItem(self.secure)  # FULL
-        self.combobox_sec.addItem(self.nonsecure)  # CORE
+        self.combobox_sec.addItem(self.secure)  # secure
+        self.combobox_sec.addItem(self.nonsecure)  # nonsecure
         self.combobox_sec.setCurrentIndex(0)

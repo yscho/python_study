@@ -277,9 +277,11 @@ class Ui_Dialog(object):
         else:
             print("there is no factoryOS DIR Please check again")
 
-
     def unzip_targz(self):
         tmp_src_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
+        tmp_src_path = self.changepath_slot(tmp_src_path)
+        #self.check_userdebug(tmp_src_path)
+
         if tmp_src_path[-6:] == 'tar.gz':
             self.t1 = threading.Thread(target=self.temp3_func_targzfilecheck, args=(tmp_src_path,))
             self.t1.daemon = True
@@ -291,6 +293,7 @@ class Ui_Dialog(object):
             new_path = tmp_src_upp_path + "\\" + self.unziped_targz_name
             self.oPathControl_AndroTar.lineEdit_path_txt.setText(new_path)
             self.oPathControl_AndroTar.open_path_by_url()
+            self.check_userdebug(tmp_src_path)
         else:
             print("Please check tar.gz file or not in Target DIR")
             tmp_Path = Path(tmp_src_path)
@@ -304,6 +307,24 @@ class Ui_Dialog(object):
         self.unziped_targz_name = temp_tar.getmembers()[0].name
         print(self.unziped_targz_name)
         temp_tar.close()
+
+    def check_userdebug(self, path_str):
+        if path_str[-10:] == "SMT.tar.gz":
+            temp_filename_list_smt = path_str.split("_")
+            temp_filename_smt = temp_filename_list_smt[-2]
+        elif path_str[-10:] == "bug.tar.gz" or "ser.tar.gz":
+            temp_filename_list = path_str.split(".")
+            temp_filename = temp_filename_list[-3]
+
+        print(temp_filename)
+        if temp_filename == "userdebug":
+            self.oSecureCheck.combobox_sec.setCurrentIndex(1)
+            self.on_Act_changed_sec(self.oSecureCheck.nonsecure)
+        elif temp_filename == "user" or temp_filename_smt == "user":
+            self.oSecureCheck.combobox_sec.setCurrentIndex(0)
+            self.on_Act_changed_sec(self.oSecureCheck.secure)
+
+
 
 
 
@@ -375,6 +396,11 @@ class Ui_Dialog(object):
                 print(i)
             else:
                 self.oCOLOR.COLOR_PRINT( i+"IS NOT EXIST", self.oCOLOR.RED)
+
+    def changepath_slot(self, path):
+        temp_cmd_table = str.maketrans('/', '\\')
+        changed_path = path.translate(temp_cmd_table)
+        return changed_path
 
 if __name__ == "__main__":
     import sys
