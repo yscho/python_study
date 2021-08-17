@@ -10,6 +10,7 @@ import threading
 from subprocess import run, PIPE, Popen
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QFont
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTreeView, QFileDialog
 from PyQt5.Qt import QFileSystemModel
@@ -35,8 +36,14 @@ class Ui_Dialog(object):
     tar_path_filename = ".\\tar_default_path.bin"
     sign_elf_filename = ".\\SIGNED_ABLMINI_ELF"
     sec_facos_filename= ".\\DEV_SEC_ELF"
+    signed_facos_core_abl_filename = "\\ablmini.elf_core_sign"
+    signed_facos_full_abl_filename = "\\ablmini.elf_full_sign"
+
     oCOLOR = ColorPrint.Colors()
     #hw_list = ["FULL", "CORE"]
+
+    def __init__(self):
+        self.unziped_targz_name = "test"
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("AIVI2 AUTO TOOL")
@@ -88,37 +95,50 @@ class Ui_Dialog(object):
         # ------------------TEMP BT--------------------------------------------------
 
         #button Setting
-        self.pushButton_3 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(610, 60, 75, 23))
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_3.clicked.connect(self.download_lialog_open)
+        self.bt_imageDown = QtWidgets.QPushButton(Dialog)
+        self.bt_imageDown.setGeometry(QtCore.QRect(520, 30, 120, 23))
+        self.bt_imageDown.setObjectName("bt_imageDown")
+        self.bt_imageDown.clicked.connect(self.download_lialog_open)
 
-        self.bt_temp1 = QtWidgets.QPushButton(Dialog)
-        self.bt_temp1.setGeometry(QtCore.QRect(30, 530, 113, 20))
-        self.bt_temp1.setObjectName("temp_bt1")
-        self.bt_temp1.clicked.connect(self.file_cp)
+        font = QFont('Times', 20)
+        font.setBold(True)
+        font.setFamily("Agency FB")
 
-        self.bt_temp2 = QtWidgets.QPushButton(Dialog)
-        self.bt_temp2.setGeometry(QtCore.QRect(30, 550, 113, 20))
-        self.bt_temp2.setObjectName("temp_bt2")
-        self.bt_temp2.clicked.connect(self.on_cliked_bt_checkFacos)
+        self.bt_facos_check = QtWidgets.QPushButton(Dialog)
+        self.bt_facos_check.setGeometry(QtCore.QRect(30, 500, 290, 40))
+        self.bt_facos_check.setFont(font)
+        self.bt_facos_check.clicked.connect(self.on_cliked_bt_checkFacos)
+        self.bt_filecp = QtWidgets.QPushButton(Dialog)
+        self.bt_filecp.setGeometry(QtCore.QRect(30, 540, 290, 40))
+        self.bt_filecp.setFont(font)
+        self.bt_filecp.clicked.connect(self.file_cp)
 
-        self.bt_temp3 = QtWidgets.QPushButton(Dialog)
-        self.bt_temp3.setGeometry(QtCore.QRect(30, 570, 113, 20))
-        self.bt_temp3.setObjectName("temp_bt3")
-        self.bt_temp3.clicked.connect(self.temp3_func)
+
+
+        self.bt_unzip_targz = QtWidgets.QPushButton(Dialog)
+        self.bt_unzip_targz.setGeometry(QtCore.QRect(30, 30, 290, 40))
+        self.bt_unzip_targz.setFont(font)
+        self.bt_unzip_targz.clicked.connect(self.unzip_targz)
+        #self.bt_unzip_targz.setVisible(False)
+
+        self.bt_makeqfil = QtWidgets.QPushButton(Dialog)
+        self.bt_makeqfil.setGeometry(QtCore.QRect(30, 580, 290, 40))
+        self.bt_makeqfil.setFont(font)
+        self.bt_makeqfil.clicked.connect(self.runQfil)
+
 
         self.bt_temp4 = QtWidgets.QPushButton(Dialog)
-        self.bt_temp4.setGeometry(QtCore.QRect(30, 590, 113, 20))
-        self.bt_temp4.setObjectName("temp_bt4")
+        self.bt_temp4.setGeometry(QtCore.QRect(30, 620, 290, 40))
+        self.bt_temp4.setFont(font)
         self.bt_temp4.clicked.connect(lambda: self.run_os_system("dir"))
+        self.bt_temp4.setVisible(False)
 
         # Text Browser setting
 
         self.systemBrowser = QtWidgets.QTextBrowser(Dialog)
         self.systemBrowser.setGeometry(QtCore.QRect(30, 630, 640, 240))
         self.systemBrowser.setObjectName("systemBrowser")
-        self.systemBrowser.setText("test Default=================")
+        self.systemBrowser.setText("=================SystemBrowser print test=================\n")
 
         #--------------------------------------------------------------------
         self._stdout = StdoutRedirect.StdoutRedirect(self)
@@ -135,7 +155,7 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         #self.oSecureCheck.combobox_sec.setText(_translate("Dialog", "Secure"))
-        self.pushButton_3.setText(_translate("Dialog", "PushButton"))
+        self.bt_imageDown.setText(_translate("Dialog", "Image Download"))
         self.oPathControl_AndroTar.bt_path_search.setText(_translate("Dialog", "And_path_open"))
         self.oPathControl_FacosSrc.bt_path_search.setText(_translate("Dialog", "FacOS_path_open"))
 
@@ -145,14 +165,29 @@ class Ui_Dialog(object):
         self.oPathControl_FacosSrc.bt_path_save.setText(_translate("Dialog", "Save_Src_path"))
 
 
-        self.bt_temp1.setText(_translate("Dialog", "file cp test"))
-        self.bt_temp2.setText(_translate("Dialog", "checkFacos"))
-        self.bt_temp3.setText(_translate("Dialog", "Tar unzip"))
+        self.bt_filecp.setText(_translate("Dialog", "files COPY RUN"))
+        self.bt_facos_check.setText(_translate("Dialog", "FacOS check"))
+        self.bt_unzip_targz.setText(_translate("Dialog", "Tar.gz unzip"))
+        self.bt_makeqfil.setText(_translate("Dialog", "Make QFil"))
         self.bt_temp4.setText(_translate("Dialog", "calc cmd test"))
         self.oPathControl_AndroTar.label.setText(_translate("Dialog", "FactoryOS PATH View"))
         self.oPathControl_FacosSrc.label.setText(_translate("Dialog", "Android PATH View"))
         self.oPathControl_sign_elf.label.setText(_translate("Dialog", "Sigend_facos_abl"))
         self.oPathControl_Sec_facos.label.setText(_translate("Dialog", "SEC.elf"))
+
+    def runQfil(self):
+        print("runQfil")
+        makefilename = self.oPathControl_AndroTar.lineEdit_path_txt.text()+"\\make_qfil_image.bat"
+        temp_cmd_table = str.maketrans('/','\\')
+        makefilename = makefilename.translate(temp_cmd_table)
+        print(makefilename)
+        if os.path.exists(makefilename):
+            print("Exist make qfil file")
+            print("==========================")
+            os.chdir(os.path.dirname(makefilename))
+            self.run_os_system("start cmd /c py -2 checksparse.py -i rawprogram0.xml -o rawprogram0.xml")
+        else:
+            print("There is no exist Make Qfil File")
 
     def download_lialog_open(self):
         self.download_Dialog = QtWidgets.QDialog()
@@ -191,30 +226,71 @@ class Ui_Dialog(object):
             print("unchecked")
 
     def on_cliked_bt_checkFacos(self):
-        print("\ntemp2 and minios file / version check")
+        print("\nAndroid and minios file / version check")
         tmp_src_path = self.oPathControl_FacosSrc.lineEdit_path_txt.text() + "\\miniosdata.img"
+        tmp_tar_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
+        #tmp_tar_path_test = Path(self.oPathControl_AndroTar.treeView_explorer.)
+        #print(tmp_tar_path_test)
+        if os.path.exists(tmp_tar_path):
+            print("=====Android HW check=====")
+            print(tmp_tar_path)
+            temp_cmd_table = str.maketrans('\\','/')
+            tmp_tar_path = tmp_tar_path.translate(temp_cmd_table)
+            self.android_verinfo = tmp_tar_path.split('/')
+            self.android_verinfo2 = self.android_verinfo[-1]
+
+            self.android_verinfo = self.android_verinfo2.split('_')
+            print(self.android_verinfo)
+            if self.android_verinfo[0] != "RELEASE":
+                print("there is no Android DIR Please check again")
+                return
+
+            if self.android_verinfo[1] == "6155":
+                android_HW = "CORE"
+            elif self.android_verinfo[1] == "8155":
+                android_HW = "FULL"
+            else:
+                print(self.android_verinfo)
+                return
+            print(android_HW)
+        
+        else:
+            print("there is no Android DIR Please check again")
+
         if os.path.exists(tmp_src_path):
+            print("=====FacOS HW check=====")
             print("miniosdata.img exists the version check")
             tmp_file = open(tmp_src_path, 'rb')
             tmp_file.seek(0x4E8000)
             tmp_str = tmp_file.read(21).decode('euc-kr')
             self.facos_verinfo = tmp_str.split('_')
             print(self.facos_verinfo)
-            if self.facos_verinfo[1] == self.oHwSecCheck.full or self.oHwSecCheck.core:
+            print(self.facos_verinfo[1])
+            if self.facos_verinfo[1] == android_HW:
                 print(self.facos_verinfo[1])
                 self.oHwSecCheck.combobox_1.setCurrentText(self.facos_verinfo[1])
                 self.on_Act_changed(self.facos_verinfo[1])
+            else :
+                print("Android PATH and FacOS PATH are not matched")
             tmp_file.close()
 
         else:
             print("there is no factoryOS DIR Please check again")
-    def temp3_func(self):
+
+
+    def unzip_targz(self):
         tmp_src_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
-        if (tmp_src_path[-6:] == 'tar.gz'):
+        if tmp_src_path[-6:] == 'tar.gz':
             self.t1 = threading.Thread(target=self.temp3_func_targzfilecheck, args=(tmp_src_path,))
             self.t1.daemon = True
             self.t1.start()
-
+            tmp_src_upp_path = Path(tmp_src_path).parent.__str__()
+            temp_cmd = "start cmd /c " + "tar xzvf " + tmp_src_path + " -C " + tmp_src_upp_path
+            print(temp_cmd)
+            self.run_os_system(temp_cmd)
+            new_path = tmp_src_upp_path + "\\" + self.unziped_targz_name
+            self.oPathControl_AndroTar.lineEdit_path_txt.setText(new_path)
+            self.oPathControl_AndroTar.open_path_by_url()
         else:
             print("Please check tar.gz file or not in Target DIR")
             tmp_Path = Path(tmp_src_path)
@@ -222,18 +298,20 @@ class Ui_Dialog(object):
 
     def temp3_func_targzfilecheck(self, tmp_src_path):
         tmp_src_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
-        print(tmp_src_path[-6:])
+        print("\n"+tmp_src_path[-6:])
+        print("Please wait.......")
         temp_tar = tarfile.open(tmp_src_path, 'r')
         self.unziped_targz_name = temp_tar.getmembers()[0].name
-        print(self.unziped_targz_name) #self.run_os_system("tar tvfz "+tmp_src_path)
+        print(self.unziped_targz_name)
         temp_tar.close()
+
 
 
     def file_cp(self):
         temp_cmd_table = str.maketrans('/', '\\')
         tmp_src_path = self.oPathControl_FacosSrc.lineEdit_path_txt.text()
         tmp_src_path = tmp_src_path.translate(temp_cmd_table)
-        src_path = tmp_src_path + "\\*"
+        #tmp_src_path = tmp_src_path + "\\*"
         self.check_facos_filelist(tmp_src_path)
 
         target_path = self.oPathControl_AndroTar.lineEdit_path_txt.text()
@@ -241,7 +319,31 @@ class Ui_Dialog(object):
         temp_cmd = 'robocopy '+ tmp_src_path + ' "' + target_path + '"'
         #self.run_os_system(temp_cmd)
         #self.run_os_system("start cmd /k "+temp_cmd)
-        self.run_os_system("start cmd /c " + temp_cmd)
+        print(temp_cmd)
+        self.run_os_system("start cmd /c " + temp_cmd +" /COPYALL /IS")
+        if self.oSecureCheck.combobox_sec.currentText() == self.oSecureCheck.secure :
+            print("Sucre option")
+            self.oPathControl_sign_elf.label.text()
+            self.oPathControl_Sec_facos.label.text()
+            #COPY sec.elf file
+            tmp_src_path = self.oPathControl_Sec_facos.lineEdit_path_txt.text() + "\\*"
+            tmp_src_path = tmp_src_path.translate(temp_cmd_table)
+            #temp_cmd = 'robocopy ' + tmp_src_path + ' "' + target_path + '"'
+            temp_cmd = 'copy ' + tmp_src_path + ' ' + target_path
+            print(temp_cmd)
+            self.run_os_system("start cmd /c " + temp_cmd)
+
+            #COPY SECURED ablmini.elf
+            if self.oHwSecCheck.combobox_1.currentText() == self.oHwSecCheck.core :
+                tmp_src_path = self.oPathControl_sign_elf.lineEdit_path_txt.text() + self.signed_facos_core_abl_filename
+            elif self.oHwSecCheck.combobox_1.currentText() == self.oHwSecCheck.full :
+                tmp_src_path = self.oPathControl_sign_elf.lineEdit_path_txt.text() + self.signed_facos_full_abl_filename
+            tmp_src_path = tmp_src_path.translate(temp_cmd_table)
+            target_path = target_path + "\\ablmini.elf"
+            #temp_cmd = 'robocopy '+ tmp_src_path + ' "' + target_path + '"'
+            temp_cmd = 'copy ' + tmp_src_path + ' ' + target_path
+            print(temp_cmd)
+            self.run_os_system("start cmd /c " + temp_cmd)
 
         print("COPY DONE")
 
@@ -268,7 +370,6 @@ class Ui_Dialog(object):
             file_newname = os.path.join(dir_path, "ablmini.elf")
             shutil.move(file_oldname, file_newname)
 
-        print(__name__)
         for i in filelist:
             if os.path.exists(dir_path+"\\"+i):
                 print(i)

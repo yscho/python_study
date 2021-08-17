@@ -26,6 +26,7 @@ class CexplorerPathControl:
         self.treeView_explorer.setObjectName("treeView_control")
         self.treeView_explorer.setRootIndex(self.index_root_path)
         self.treeView_explorer.clicked.connect(self.on_treeView_explorer_clicked)
+        #self.treeView_explorer.doubleClicked()
 
         self.bt_path_search = QtWidgets.QPushButton(Dialog)
         self.bt_path_search.clicked.connect(self.showDialog_Path)
