@@ -138,8 +138,8 @@ class Ui_Dialog(object):
         self.systemBrowser = QtWidgets.QTextBrowser(Dialog)
         self.systemBrowser.setGeometry(QtCore.QRect(30, 630, 640, 240))
         self.systemBrowser.setObjectName("systemBrowser")
-        self.systemBrowser.setText("=================SystemBrowser print test=================\n")
-
+        self.systemBrowser.setText("<b>=================SystemBrowser print test=================</b>")
+        self.systemBrowser.append("\n")
         #--------------------------------------------------------------------
         self._stdout = StdoutRedirect.StdoutRedirect(self)
         self._stdout.start()
@@ -233,7 +233,8 @@ class Ui_Dialog(object):
         #print(tmp_tar_path_test)
         if os.path.exists(tmp_tar_path):
             print("=====Android HW check=====")
-            print(tmp_tar_path)
+            temp_checkinfo = tmp_tar_path
+
             temp_cmd_table = str.maketrans('\\','/')
             tmp_tar_path = tmp_tar_path.translate(temp_cmd_table)
             self.android_verinfo = tmp_tar_path.split('/')
@@ -244,6 +245,7 @@ class Ui_Dialog(object):
             if self.android_verinfo[0] != "RELEASE":
                 print("there is no Android DIR Please check again")
                 return
+            self.check_userdebug(temp_checkinfo)
 
             if self.android_verinfo[1] == "6155":
                 android_HW = "CORE"
@@ -270,8 +272,12 @@ class Ui_Dialog(object):
                 print(self.facos_verinfo[1])
                 self.oHwSecCheck.combobox_1.setCurrentText(self.facos_verinfo[1])
                 self.on_Act_changed(self.facos_verinfo[1])
-            else :
-                print("Android PATH and FacOS PATH are not matched")
+                self.systemBrowser.append(
+                    "<b><p style=\"color : green\">Android PATH and FacOS PATH are matched</b><p>")
+                print("\n")
+            else:
+                self.systemBrowser.append(
+                    "<b><p style=\"color : red\">Android PATH and FacOS PATH are not matched</b><p>")
             tmp_file.close()
 
         else:
@@ -288,12 +294,12 @@ class Ui_Dialog(object):
             self.t1.start()
             tmp_src_upp_path = Path(tmp_src_path).parent.__str__()
             temp_cmd = "start cmd /c " + "tar xzvf " + tmp_src_path + " -C " + tmp_src_upp_path
-            print(temp_cmd)
             self.run_os_system(temp_cmd)
             new_path = tmp_src_upp_path + "\\" + self.unziped_targz_name
             self.oPathControl_AndroTar.lineEdit_path_txt.setText(new_path)
             self.oPathControl_AndroTar.open_path_by_url()
-            self.check_userdebug(tmp_src_path)
+            #self.check_userdebug(tmp_src_path)
+            self.check_userdebug(new_path)
         else:
             print("Please check tar.gz file or not in Target DIR")
             tmp_Path = Path(tmp_src_path)
@@ -309,21 +315,32 @@ class Ui_Dialog(object):
         temp_tar.close()
 
     def check_userdebug(self, path_str):
-        if path_str[-10:] == "SMT.tar.gz":
-            temp_filename_list_smt = path_str.split("_")
-            temp_filename_smt = temp_filename_list_smt[-2]
-        elif path_str[-10:] == "bug.tar.gz" or "ser.tar.gz":
-            temp_filename_list = path_str.split(".")
-            temp_filename = temp_filename_list[-3]
-
-        print(temp_filename)
-        if temp_filename == "userdebug":
-            self.oSecureCheck.combobox_sec.setCurrentIndex(1)
-            self.on_Act_changed_sec(self.oSecureCheck.nonsecure)
-        elif temp_filename == "user" or temp_filename_smt == "user":
-            self.oSecureCheck.combobox_sec.setCurrentIndex(0)
-            self.on_Act_changed_sec(self.oSecureCheck.secure)
-
+        self.changepath_slot(path_str)
+        if os.path.exists(path_str):
+            f = open(path_str+"\\build_fingerprint.txt", 'r')
+            temp_fingerprint = f.readline()
+            temp_check_srt_list = temp_fingerprint.split(":")
+            buildmode_check_srt = temp_check_srt_list[-1]
+            hw_check_str = temp_check_srt_list[0]
+            hw_check_str_list = hw_check_str.split("/")
+            hw_check_str = hw_check_str_list[1]
+            print(hw_check_str)
+            temp_check_srt_list = buildmode_check_srt.split("/")
+            buildmode_check_srt = temp_check_srt_list[-2]
+            print(buildmode_check_srt)
+            f.close()
+            if buildmode_check_srt == "userdebug":
+                self.oSecureCheck.combobox_sec.setCurrentIndex(1)
+                self.on_Act_changed_sec(self.oSecureCheck.nonsecure)
+            elif buildmode_check_srt == "user":
+                self.oSecureCheck.combobox_sec.setCurrentIndex(0)
+                self.on_Act_changed_sec(self.oSecureCheck.secure)
+            if hw_check_str == "aivi2_core":
+                self.oHwSecCheck.combobox_1.setCurrentIndex(1)
+            elif hw_check_str == "aivi2_full":
+                self.oHwSecCheck.combobox_1.setCurrentIndex(0)
+        else:
+            print("FILE NOT EXIST : build_fingerprint.txt")
 
 
 
