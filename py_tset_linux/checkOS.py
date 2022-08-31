@@ -1,7 +1,5 @@
 import platform
 
-
-
 def currentOS_fullname():
     os_full_name = platform.platform()
     return os_full_name
